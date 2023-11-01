@@ -1,1 +1,24 @@
+# Exploit code
+def generate_happiness(h, d):
+    return random.normalvariate(h, d)
 
+
+def exploitonly() -> float:
+    c1 = (7, 3)
+    c2 = (4, 10)
+    c3 = (10, 6)
+    c4 = (5, 2)
+    # make list to store the happiness values for each cafeteria
+    h_v = []
+    # Visit each cafeteria once and generate happiness values
+    h_v.append(generate_happiness(*c1))
+    h_v.append(generate_happiness(*c2))
+    h_v.append(generate_happiness(*c3))
+    h_v.append(generate_happiness(*c4))
+    # Find the index of the best cafeteria
+    best_cafeteria = h_v.index(max(h_v))
+    # Visit the best cafeteria for the next 196 days and generate happiness values
+    for i in range(196):
+        h_v.append(generate_happiness([c1, c2, c3, c4][best_cafeteria]))
+    # Return the sum of all the happiness values
+    return sum(h_v)
