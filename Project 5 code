@@ -1,3 +1,67 @@
+import random
+# H = happiness values
+H = [7, 4, 10, 5]
+# D = deviation value
+D = [3, 10, 6, 2]
+
+
+
+
+# eGreedy task
+def eGreedy(e=10) -> float:
+    # Store and update happiness values and time of visits for each cafeteria
+    happiness_values = [0, 0, 0, 0]
+    visit_count = [1, 1, 1, 1]
+
+    # Day 1-4 simulate the values
+    # set the simulated value to the happiness values
+    happiness_values[0] = random.normalvariate(H[0], D[0])
+    happiness_values[1] = random.normalvariate(H[1], D[1])
+    happiness_values[2] = random.normalvariate(H[2], D[2])
+    happiness_values[3] = random.normalvariate(H[3], D[3])
+
+    # create a list storing the averages
+    averages = [happiness_values[0]/visit_count[0],
+                happiness_values[1]/visit_count[1],
+                happiness_values[2]/visit_count[2],
+                happiness_values[3]/visit_count[3]]
+
+    # Find the best cafe
+    # Best cafe will not always be the same
+    best_cafe = averages.index(max(averages))
+
+
+    # Then create a loop determine for the next 196 days
+    # determine if we're going to the random or the best
+    for i in range(196):
+        visit_random_cafe = random.random()
+
+        # I will visit a random cafe
+        if visit_random_cafe < (e/100):
+            # Choose a random cafeteria
+            random_cafe = random.randint(0, 3)
+            visit_count[random_cafe] += 1
+            # generate a random value for happiness based on its normal distribution
+            happiness = random.normalvariate(H[random_cafe], D[random_cafe])
+            # update the values
+            happiness_values[random_cafe] += happiness
+
+        else:
+            # I will visit the cafeteria with the highest average happiness value
+            happiness = random.normalvariate(H[best_cafe], D[best_cafe])
+            # update the values
+            visit_count[best_cafe] += 1
+            happiness_values[best_cafe] += happiness
+        total_happiness_value = sum(happiness_values)
+    return total_happiness_value
+
+# print out simulated result
+total_happiness_value = eGreedy()
+print("Total happiness value: " + str(total_happiness_value))
+
+
+
+
 # Exploit code
 def generate_happiness(h, d):
     return random.normalvariate(h, d)
