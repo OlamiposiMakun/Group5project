@@ -8,13 +8,6 @@ D = [3, 10, 6, 2]
 
 # Exploit code
 
-import random
-# H = happiness values
-H = [7, 4, 10, 5]
-# D = deviation value
-D = [3, 10, 6, 2]
-
-
 # Get random number for a normal distribution with
 # mean of h and standard deviation of d.
 def generate_happiness(h1, d1) -> float:
@@ -49,13 +42,6 @@ print(exploitonly())
 
 
 # eGreedy task
-import random
-
-# H = happiness values
-H = [7, 4, 10, 5]
-# D = deviation value
-D = [3, 10, 6, 2]
-
 
 def eGreedy(e=10) -> float:
     # Store and update happiness values and time of visits for each cafeteria
@@ -113,11 +99,6 @@ print(total/1000)
 
 
 # exploreOnly task
-import random
-
-# given values for average happiness and standard deviation
-avg_happiness = [4, 5, 7, 10]
-standard_dev = [2, 3, 6, 10]
 
 def generate_happiness(H1, D1):
     return random.normalvariate(H1, D1)
