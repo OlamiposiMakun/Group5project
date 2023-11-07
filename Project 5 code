@@ -1,20 +1,20 @@
 import random
-# H = happiness values
-H = [7, 4, 10, 5]
-# D = deviation value
-D = [3, 10, 6, 2]
 
+# H = happiness values
+H = [10, 8, 6, 4]
+# D = deviation value
+D = [4, 6, 8, 10]
 
 
 # Exploit code
 
 # Get random number for a normal distribution with
 # mean of h and standard deviation of d.
-def generate_happiness(h1, d1) -> float:
-    return random.normalvariate(h1, d1)
+def generate_happiness(H1, D1):
+    return random.normalvariate(H1, D1)
 
 
-def exploitonly():
+def exploitOnly():
     c1 = (H[0], D[0])
     c2 = (H[1], D[1])
     c3 = (H[2], D[2])
@@ -50,14 +50,13 @@ def eGreedy(e=10) -> float:
     happiness_values[2] = random.normalvariate(H[2], D[2])
     happiness_values[3] = random.normalvariate(H[3], D[3])
 
-
     # Then create a loop determine for the next 196 days
     # determine if we're going to the random or the best
     for i in range(196):
         visit_random_cafe = random.random()
 
         # I will visit a random cafe
-        if visit_random_cafe < (e/100):
+        if visit_random_cafe < (e / 100):
             # Choose a random cafeteria
             random_cafe = random.randint(0, 3)
             visit_count[random_cafe] += 1
@@ -65,7 +64,7 @@ def eGreedy(e=10) -> float:
             happiness = random.normalvariate(H[random_cafe], D[random_cafe])
             # update the values
             happiness_values[random_cafe] += happiness
-        
+
         # I will visit the cafeteria with the highest average happiness value
         else:
             # a list of averages
@@ -85,82 +84,77 @@ def eGreedy(e=10) -> float:
     return total_happiness_value
 
 
-
 # exploreOnly task
 
-def generate_happiness(H1, D1):
-    return random.normalvariate(H1, D1)
+
+
 
 def exploreOnly():
     total_happiness = []
     # list to store happiness values in
     for cafeteria in range(4):  # generate happiness value for each cafeteria
         for day in range(50):  # generate happiness values for 50 days for each cafeteria
-        # generate a new happiness value
-            happiness = random.normalvariate(avg_happiness[cafeteria], standard_dev[cafeteria])
+            # generate a new happiness value
+            happiness = random.normalvariate(H[cafeteria], D[cafeteria])
             total_happiness.append(happiness)
     # return sum of all happiness values
     return sum(total_happiness)
 
-total = 0
-for i in range(1000):
-    total += exploreOnly()
-print(total/1000)
 
-#Simulation Task:
+
+
+# Simulation Task:
 def simulation(t, e=10):
+    optimalhappiness = max(H) * 200
 
+    exploreonlyExphappiness = 50 * H[0] + 50 * H[1] + 50 * H[2] + 50 * H[3]
+    exploreonlyExregret = optimalhappiness - exploreonlyExphappiness
 
+    exploitonlyExhappiness = H[0] + H[1] + H[2] + H[3] + 196 * max(H)
+    exploitonlyExregret = optimalhappiness - exploitonlyExhappiness
 
- optimalhappiness = max(h)*200
+    egreedyexpdays = ((e / 100) * 200) / len(H)  # defines the amount of days per cafeteria for exploration
+    daysofeGreedyExploitation = ((100 - e) / 100) * 200  # defines the amount of exploitation days(days going to the best resturant)
+    eGreedyExhappiness = max(H) * daysofeGreedyExploitation + H[0] * egreedyexpdays + H[1] * egreedyexpdays + H[2] * egreedyexpdays + H[3] * egreedyexpdays
 
- exploreonlyExphappiness = 50*h[0] + 50*h[1] + 50*h[2] + 50*h[3]
- exploreonlyExregret = optimalhappiness - exploreonlyExphappiness
+    eGreedyregret = optimalhappiness - eGreedyExhappiness
 
- exploitonlyExhappiness = h[0] + h[1] + h[2] + h[3] + 196*max(h)
- exploitonlyExregret = optimalhappiness - exploitonlyExhappiness
+    eGreedysum = 0
+    exploreOnlysum = 0
+    exploitOnlysum = 0
 
- egreedyexpdays = ((e/100)*200)/len(h) #defines the amount of days per cafeteria for exploration
- daysofeGreedyExploitation = ((100-e)/100)*200 #defines the amount of exploitation days(days going to the best resturant)
- eGreedyExhappiness = max(h)*daysofeGreedyExploitation + h[0]*egreedyexpdays + h[1]*egreedyexpdays + h[2]*egreedyexpdays + h[3]*egreedyexpdays
+    for i in range(t):  # acuumilation loop that adds all the function specific generated values to a variable based on the "t"
+        eGreedysum = eGreedysum + eGreedy(e)
+        exploreOnlysum = exploreOnlysum + exploreOnly()
+        exploitOnlysum = exploitOnlysum + exploitOnly()
 
- eGreedyregret = optimalhappiness - eGreedyExhappiness
+    simulatedegreedyhappiness = eGreedysum / t  # divides the total amount of generated values by the amount of times the loop ran.(Providing an average)
+    simulatedegreedyregret = optimalhappiness - simulatedegreedyhappiness
 
- eGreedysum = 0
- exploreOnlysum = 0
- exploitOnlysum = 0
+    simulatedexplorehappiness = exploreOnlysum / t
+    simulatedexploreregret = optimalhappiness - simulatedexplorehappiness
 
- for i in range(t): #acuumilation loop that adds all the function specific generated values to a variable based on the "t"
-  eGreedysum = eGreedysum + eGreedy(e)
-  exploreOnlysum = exploreOnlysum + exploreOnly()
-  exploitOnlysum = exploitOnlysum + exploitOnly()
+    simulatedexploithappiness = exploitOnlysum / t
+    simulatedexploitregret = optimalhappiness - simulatedexploithappiness
+    # Prints all the return values in a very pretty matter
+    print("Optimum Happiness: " + "{:.2f}".format(optimalhappiness))
+    print(" ")
+    print("Explore Only: ")
+    print("Expected Happiness: " + "{:.2f}".format(exploreonlyExphappiness))
+    print("Expected Regret: " + "{:.2f}".format(exploreonlyExregret))
+    print("Simulated Happiness: " + "{:.2f}".format(simulatedexplorehappiness))
+    print("Simulated Regret: " + "{:.2f}".format(simulatedexploreregret))
+    print(" ")
+    print("Exploit Only: ")
+    print("Expected Happiness: " + "{:.2f}".format(exploitonlyExhappiness))
+    print("Expected Regret: " + "{:.2f}".format(exploitonlyExregret))
+    print("Simulated Happiness: " + "{:.2f}".format(simulatedexploithappiness))
+    print("Simulated Regret: " + "{:.2f}".format(simulatedexploitregret))
+    print(" ")
+    print("eGreedy: ")
+    print("Expected Happiness: " + "{:.2f}".format(eGreedyExhappiness))
+    print("Expected Regret: " + "{:.2f}".format(eGreedyregret))
+    print("Simulated Happiness: " + "{:.2f}".format(simulatedegreedyhappiness))
+    print("Simulated Regret: " + "{:.2f}".format(simulatedegreedyregret))
 
- simulatedegreedyhappiness  = eGreedysum/t #divides the total amount of generated values by the amount of times the loop ran.(Providing an average)
- simulatedegreedyregret = optimalhappiness - simulatedegreedyhappiness
-
- simulatedexplorehappiness = exploreOnlysum/t
- simulatedexploreregret = optimalhappiness - simulatedexplorehappiness
-
- simulatedexploithappiness = exploitOnlysum/t
- simulatedexploitregret = optimalhappiness - simulatedexploithappiness
- #Prints all the return values in a very pretty matter
- print("Optimum Happiness: " + "{:.2f}".format(optimalhappiness))
- print(" ")
- print("Explore Only: ")
- print("Expected Happiness: " + "{:.2f}".format(exploreonlyExphappiness))
- print("Expected Regret: " + "{:.2f}".format(exploreonlyExregret))
- print("Simulated Happiness: " + "{:.2f}".format(simulatedexplorehappiness))
- print("Simulated Regret: " + "{:.2f}".format(simulatedexploreregret))
- print(" ")
- print("Exploit Only: ")
- print("Expected Happiness: " + "{:.2f}".format(exploitonlyExhappiness))
- print("Expected Regret: " + "{:.2f}".format(exploitonlyExregret))
- print("Simulated Happiness: " + "{:.2f}".format(simulatedexploithappiness))
- print("Simulated Regret: " + "{:.2f}".format(simulatedexploitregret))
- print(" ")
- print("eGreedy: ")
- print("Expected Happiness: " + "{:.2f}".format(eGreedyExhappiness))
- print("Expected Regret: " + "{:.2f}".format(eGreedyregret))
- print("Simulated Happiness: " + "{:.2f}".format(simulatedegreedyhappiness))
- print("Simulated Regret: " + "{:.2f}".format(simulatedegreedyregret))
 
