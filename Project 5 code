@@ -14,7 +14,7 @@ def generate_happiness(h, d):
     return random.normalvariate(h, d)
 
 
-def exploitonly() -> float:
+def exploitOnly() -> float:
     c1 = (H[0], D[0])
     c2 = (H[1], D[1])
     c3 = (H[2], D[2])
@@ -125,3 +125,49 @@ total = 0
 for i in range(1000):
     total += exploreOnly()
 print(total/1000)
+
+#Simulation Task:
+def simulation(t, e=10):
+
+
+
+ optimalhappiness = max(h)*200
+
+ exploreonlyExphappiness = 50*h[0] + 50*h[1] + 50*h[2] + 50*h[3]
+ exploreonlyExregret = optimalhappiness - exploreonlyExphappiness
+
+ exploitonlyExhappiness = h[0] + h[1] + h[2] + h[3] + 196*max(h)
+ exploitonlyExregret = optimalhappiness - exploitonlyExhappiness
+
+ egreedyexpdays = ((e/100)*200)/len(h) #defines the amount of days per cafeteria for exploration
+ daysofeGreedyExploitation = ((100-e)/100)*200 #defines the amount of exploitation days(days going to the best resturant)
+ eGreedyExhappiness = max(h)*daysofeGreedyExploitation + h[0]*egreedyexpdays + h[1]*egreedyexpdays + h[2]*egreedyexpdays + h[3]*egreedyexpdays
+
+ eGreedyregret = optimalhappiness - eGreedyExhappiness
+
+ eGreedysum = 0
+ exploreOnlysum = 0
+ exploitOnlysum = 0
+
+ for i in range(t): #acuumilation loop that adds all the function specific generated values to a variable based on the "t"
+  eGreedysum = eGreedysum + eGreedy(e)
+  exploreOnlysum = exploreOnlysum + exploreOnly()
+  exploitOnlysum = exploitOnlysum + exploitOnly()
+
+ simulatedegreedyhappiness  = eGreedysum/t #divides the total amount of generated values by the amount of times the loop ran.(Providing an average)
+ simulatedegreedyregret = optimalhappiness - simulatedegreedyhappiness
+
+ simulatedexplorehappiness = exploreOnlysum/t
+ simulatedexploreregret = optimalhappiness - simulatedexplorehappiness
+
+ simulatedexploithappiness = exploitOnlysum/t
+ simulatedexploitregret = optimalhappiness - simulatedexploithappiness
+ #Prints all the return values in a very pretty matter
+ print("Optimum Happiness: " + "{:.2f}".format(optimalhappiness))
+ print(" ")
+ print("Explore Only: ")
+ print("Expected Happiness: " + "{:.2f}".format(exploreonlyExphappiness))
+ print("Expected Regret: " + "{:.2f}".format(exploreonlyExregret))
+ print("Simulated Happiness: " + "{:.2f}".format(simulatedexplorehappiness))
+ print("Simulated Regret: " + "{:.2f}".format(simulatedexploreregret))
+ print(" ")
