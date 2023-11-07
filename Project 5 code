@@ -21,6 +21,8 @@ def generate_happiness(h1, d1) -> float:
     return random.normalvariate(h1, d1)
 
 
+print(generate_happiness(7, 3))
+
 
 def exploitonly():
     c1 = (H[0], D[0])
@@ -43,6 +45,7 @@ def exploitonly():
     return sum(happiness_values)
 
 
+print(exploitonly())
 
 
 # eGreedy task
