@@ -8,13 +8,21 @@ D = [3, 10, 6, 2]
 
 # Exploit code
 
+import random
+# H = happiness values
+H = [7, 4, 10, 5]
+# D = deviation value
+D = [3, 10, 6, 2]
+
+
 # Get random number for a normal distribution with
 # mean of h and standard deviation of d.
-def generate_happiness(h, d):
-    return random.normalvariate(h, d)
+def generate_happiness(h1, d1) -> float:
+    return random.normalvariate(h1, d1)
 
 
-def exploitOnly() -> float:
+
+def exploitonly():
     c1 = (H[0], D[0])
     c2 = (H[1], D[1])
     c3 = (H[2], D[2])
@@ -30,9 +38,10 @@ def exploitOnly() -> float:
     best_cafeteria = happiness_values.index(max(happiness_values))
     # Visit the best cafeteria for the next 196 days and generate happiness values
     for i in range(196):
-        happiness_values.append(generate_happiness([c1, c2, c3, c4][best_cafeteria]))
+        happiness_values.append(generate_happiness(*[c1, c2, c3, c4][best_cafeteria]))
     # Return the sum of all the happiness values
     return sum(happiness_values)
+
 
 
 
