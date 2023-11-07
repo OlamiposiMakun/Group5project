@@ -90,12 +90,6 @@ def eGreedy(e=10) -> float:
     total_happiness_value = sum(happiness_values)
     return total_happiness_value
 
-# simulate for 1000 times to check if it's around 1800
-total = 0
-for i in range(1000):
-    total += eGreedy()
-print(total/1000)
-
 
 
 # exploreOnly task
